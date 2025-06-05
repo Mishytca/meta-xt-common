@@ -20,18 +20,20 @@ SRCREV = "b218acf44e71c4a77082944e3878e1859a352fba"
 
 DEPENDS = "libxenbe libconfig git-native"
 
+WAYLAND_IVI_DEPS = "${@bb.utils.contains('DISTRO_FEATURES', 'ivi-shell', 'wayland-ivi-extension', '', d)}"
+
 PACKAGECONFIG ??= "\
     drm \
     input \
     zcopy zcopy-drm zcopy-kms zcopy-dmabuf \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland wayland-ivi','', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland wayland-ivi','', d)} \     
 "
 
 PACKAGECONFIG[doc] = "-DWITH_DOC=ON,-DWITH_DOC=OFF,doxygen-native"
 PACKAGECONFIG[drm] = "-DWITH_DRM=ON,-DWITH_DRM=OFF,libdrm"
 PACKAGECONFIG[input] = "-DWITH_INPUT=ON,-DWITH_INPUT=OFF,"
 PACKAGECONFIG[wayland] = "-DWITH_WAYLAND=ON,-DWITH_WAYLAND=OFF,wayland wayland-native"
-PACKAGECONFIG[wayland-ivi] = "-DWITH_WAYLAND=ON -DWITH_IVI_EXTENSION=ON,-DWITH_WAYLAND=OFF -DWITH_IVI_EXTENSION=OFF,wayland wayland-native wayland-ivi-extension"
+PACKAGECONFIG[wayland-ivi] = "-DWITH_WAYLAND=ON -DWITH_IVI_EXTENSION=ON,-DWITH_WAYLAND=OFF -DWITH_IVI_EXTENSION=OFF,wayland wayland-native ${WAYLAND_IVI_DEPS}"
 PACKAGECONFIG[zcopy] = "-DWITH_ZCOPY=ON,-DWITH_ZCOPY=OFF,"
 PACKAGECONFIG[zcopy-drm] = "-DWITH_DRM_ZCOPY=ON,-DWITH_DRM_ZCOPY=OFF,"
 PACKAGECONFIG[zcopy-kms] = "-DWITH_KMS_ZCOPY=ON,-DWITH_KMS_ZCOPY=OFF,"
